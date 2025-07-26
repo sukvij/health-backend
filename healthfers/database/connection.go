@@ -13,8 +13,7 @@ func Connection() (*gorm.DB, error) {
 	var err error
 
 	// dsn := config.Configuration()
-	dsn := "postgresql://neondb_owner:npg_89rlyPORubwk@ep-fancy-resonance-aeyd1u6b-pooler.c-2.us-east-2.aws.neon.tech/health_reports?sslmode=require&channel_binding=require"
-
+	dsn := "postgresql://neondb_owner:npg_vF4p8PLVbdZE@ep-plain-recipe-a1kr75zv-pooler.ap-southeast-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 	const maxRetries = 10
 	const retryDelay = 1 * time.Second
 
