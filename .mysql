@@ -1,0 +1,51 @@
+create database health_reports;
+
+-- Create Users Table
+CREATE TABLE IF NOT EXISTS users (
+    id INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing integer ID
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP, -- DATETIME for MySQL
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- Auto-update on modification
+    deleted_at DATETIME NULL -- NULLable for soft delete
+);
+
+-- Create HealthReports Table
+CREATE TABLE IF NOT EXISTS health_reports (
+    id INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing integer ID
+    user_id INT NOT NULL, -- References INT ID of users table
+    type VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    date VARCHAR(10) NOT NULL, -- Stored as YYYY-MM-DD string
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME NULL,
+    -- Foreign key constraint to the users table
+    CONSTRAINT fk_user_reports
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE -- If a user is deleted, their reports are also deleted
+);
+
+-- Create ChatSessions Table
+-- This table stores the entire chat history for a user as a JSON string.
+-- A unique index on user_id ensures each user has only one chat session record.
+CREATE TABLE IF NOT EXISTS chat_sessions (
+    id INT PRIMARY KEY AUTO_INCREMENT, -- Auto-incrementing integer ID
+    user_id INT UNIQUE NOT NULL, -- References INT ID of users table, UNIQUE ensures one chat session per user
+    messages JSON NOT NULL, -- Stores the array of ChatMessage as JSON (MySQL's JSON type)
+    last_updated DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    deleted_at DATETIME NULL,
+    -- Foreign key constraint to the users table
+    CONSTRAINT fk_user_chat_sessions
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE -- If a user is deleted, their chat sessions are also deleted
+);
+
+-- Optional: Add indexes for performance (GORM tags like `index` and `uniqueIndex` handle this automatically)
+-- For MySQL, GORM's `index` and `uniqueIndex` tags will create these.
+-- CREATE INDEX idx_health_reports_user_id ON health_reports (user_id);
+-- CREATE UNIQUE INDEX idx_chat_sessions_user_id ON chat_sessions (user_id);
