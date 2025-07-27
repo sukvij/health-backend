@@ -12,7 +12,6 @@ type HealthReport struct {
 	// ID is the primary key for the HealthReport, now auto-incrementing integer.
 	ID uint `gorm:"primaryKey;autoIncrement" json:"id"`
 
-	// UserID is a foreign key linking to the User model's integer ID.
 	UserID uint `gorm:"not null;index" json:"userId"` // References User's uint ID
 
 	// Type of the report (e.g., "Daily Log", "Symptom Update").
